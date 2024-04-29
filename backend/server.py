@@ -1,3 +1,4 @@
+import io
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import tensorflow as tf
@@ -8,7 +9,7 @@ from keras.preprocessing.image import ImageDataGenerator
 import numpy as np
 import cv2
 from keras import backend as K
-
+from PIL import Image
 # Import from tensorflow_addons for normalization (if necessary)
 try:
   from tensorflow_addons.image import preprocess_input
@@ -62,12 +63,19 @@ def preprocess_image(image):
         # Get image data from FileStorage object
         image_data = image.read()
 
-        # Convert bytes to a NumPy array
-        image_array = np.frombuffer(image_data, np.uint8)
-        image_array = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
+        # Convert bytes to a PIL Image object
+        pil_image = Image.open(io.BytesIO(image_data))
 
-        # Resize and normalize (adjust if needed)
-        # image_array = tf.keras.preprocessing.image.resize(image_array, TARGET_SIZE)
+        # Convert the image to RGB mode to remove alpha channel
+        pil_image = pil_image.convert("RGB")
+
+        # Resize the image to the target size
+        pil_image = pil_image.resize(TARGET_SIZE)
+
+        # Convert the PIL Image to a NumPy array
+        image_array = np.array(pil_image)
+
+        # Normalize the image (adjust if needed)
         image_array = preprocess_input(image_array)  # Use appropriate normalization
 
         # Add batch dimension
@@ -115,38 +123,5 @@ def predict():
         "probability": float(predicted_proba)  # Cast probability to float
     })
  
-    # """Handles image prediction requests."""
-    image = request.files.get("image")
-    if not image:
-        return jsonify({"error": "No image file uploaded"}), 400
-
-    # Preprocess the image
-    processed_image = preprocess_image(image)
-
-    # Check if processing failed (processed_image will be None in that case)
-    if processed_image is None:
-        return jsonify({"error": "Error processing image"}), 400
-
-    if not processed_image:
-        return jsonify({"error": "Error processing image"}), 400
-
-    # Load the model (consider using a cache mechanism for efficiency)
-    try:
-        model = load_model(MODEL_PATH, custom_objects={
-            'GlobalAveragePooling2D': GlobalAveragePooling2D
-        })
-    except Exception as e:
-        print(f"Error loading model: {str(e)}")
-        return jsonify({"error": "Error loading prediction model"}), 500
-
-    # Make prediction
-    predictions = model.predict(processed_image)
-    predicted_index = np.argmax(predictions[0])
-    predicted_class = classNames[predicted_index]
-    prediction_confidence = predictions[0][predicted_index]
-
-    # Return the prediction result
-    return jsonify({"class": predicted_class, "confidence": float(prediction_confidence)})
-
 if __name__ == "__main__":
     app.run(debug=True)
