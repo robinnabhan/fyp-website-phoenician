@@ -19,7 +19,7 @@ except ImportError:
     return x / 255.0  # Standard normalization (divide by 255)
 
 # Define model path and class names
-MODEL_PATH = r'C:\Users\sim-robinnab\Desktop\fyp-robin-website\model\best-model-16-0.23.h5'
+MODEL_PATH = r'model\best-model-16-0.23.h5'
 TARGET_SIZE = (256, 256)
 classNames = [
     "Alef",
