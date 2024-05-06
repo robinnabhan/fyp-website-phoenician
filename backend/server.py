@@ -1,4 +1,5 @@
 import io
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import tensorflow as tf
@@ -122,6 +123,31 @@ def predict():
         "class": str(predicted_class),  # Ensure class is a string
         "probability": float(predicted_proba)  # Cast probability to float
     })
- 
+
+
+@app.route('/api/report-incorrect', methods=['POST'])
+def report_incorrect():
+  """Handles user feedback for incorrect predictions."""
+  if not request.form:  # Check for data in form (can be multipart or urlencoded)
+    return jsonify({'error': 'No data provided'}), 400
+  print(request.form)
+  corrected_class = request.form.get('correctedClass')
+  image_data = request.files.get('image')  # Optional, depending on your needs
+
+  # Implement logic to store image in user_feedback folder based on corrected_class
+  if image_data:
+    feedback_dir = os.path.join('user_feedback', corrected_class)
+  # Check if subfolder doesn't exist before creating with exist_ok=True
+    if not os.path.exists(feedback_dir):
+      os.makedirs(feedback_dir, exist_ok=True)  # Create folder if it doesn't exist # Create folder if it doesn't exist
+    filename = f'{request.remote_addr}_{corrected_class}.jpg'  # Unique filename with user IP
+    filepath = os.path.join(feedback_dir, filename)
+    with open(filepath, 'wb') as f:
+      f.write(image_data.read())
+
+  # You can optionally store additional user feedback information in a database here
+
+  return jsonify({'message': 'Feedback received'}), 200
+
 if __name__ == "__main__":
     app.run(debug=True)
