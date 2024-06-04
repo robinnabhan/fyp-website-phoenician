@@ -12,7 +12,7 @@ const Header: React.FC = () => {
         <Box>
           <Link to='/'  style={{ textDecoration: 'none', color: 'inherit',}}><Button color="inherit">Home</Button></Link>
           <Link to='/about'  style={{ textDecoration: 'none', color: 'inherit',}}>  <Button color="inherit">About</Button></Link> 
-          <Link to='/Comtact'  style={{ textDecoration: 'none', color: 'inherit',}}><Button color="inherit">Contact</Button></Link> 
+          <Link to='/contact'  style={{ textDecoration: 'none', color: 'inherit',}}><Button color="inherit">Contact</Button></Link> 
         </Box>
       </Toolbar>
     </AppBar>
