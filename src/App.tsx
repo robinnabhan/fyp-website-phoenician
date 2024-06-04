@@ -1,19 +1,26 @@
-import React from 'react';
-import ImageClassifier from './imageupload';
 import Header from './Header';
-import HeroSection from './HeroSection';
-import HowItWorks from './HowItWorks';
 import Footer from './Footer';
+import ScrollToTop from './ScrollToTop';
+import { Route, Routes } from 'react-router-dom';
+import Home from './Home';
+import About from './About';
+import ContactUs from './Contact';
 
 function App() {
   return (
-    <>
-   <Header/>
-   <HeroSection/>
-   <HowItWorks/>
-    <ImageClassifier/>
-    <Footer/>
-    </>
+ 
+  <>
+  <ScrollToTop/>
+  <Header/>
+  <Routes>
+    <Route path="/" element={<Home />} />
+    <Route path="/about" element={<About />} />
+    <Route path="/contact" element={<ContactUs />} />
+
+    {/* Add more routes for other pages */}
+  </Routes>
+  <Footer/>
+  </>
   );
 
 }

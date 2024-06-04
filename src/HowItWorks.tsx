@@ -3,7 +3,7 @@ import { Container, Grid, Typography, Card, CardContent, Box } from '@mui/materi
 
 const HowItWorks: React.FC = () => {
   return (
-    <Container maxWidth="lg" sx={{ my: 8 }}>
+    <Container maxWidth="lg" >
       <Typography variant="h4" component="h2" align="center" gutterBottom>
         How It Works
       </Typography>

@@ -3,7 +3,7 @@ import { Container, Grid, Typography, Button, Box } from '@mui/material';
 
 const HeroSection: React.FC = () => {
   return (
-    <Container maxWidth="lg" sx={{ my: 8 }}>
+    <Container maxWidth="lg" >
       <Grid container spacing={4}>
         <Grid item xs={12} md={6}>
           <Typography variant="h3" component="h1" gutterBottom>

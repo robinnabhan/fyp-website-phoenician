@@ -13,6 +13,9 @@ const Footer: React.FC = () => {
             <Typography variant="body2">
               Unlocking the secrets of ancient civilizations through AI.
             </Typography>
+            <Typography variant="body2" sx={{ mt: 2 }}>
+              Please note that our AI model is still in development and may sometimes predict incorrectly. We are continuously working on improving its accuracy.
+            </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6" component="h2" gutterBottom>

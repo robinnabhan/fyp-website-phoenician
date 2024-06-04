@@ -2,6 +2,7 @@ import io
 import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+
 import tensorflow as tf
 from keras.models import load_model
 from keras.layers import GlobalAveragePooling2D
@@ -11,6 +12,10 @@ import numpy as np
 import cv2
 from keras import backend as K
 from PIL import Image
+import datetime
+# from flask_mail import Mail, Message
+
+
 # Import from tensorflow_addons for normalization (if necessary)
 try:
   from tensorflow_addons.image import preprocess_input
@@ -18,6 +23,7 @@ except ImportError:
   print("tensorflow_addons not installed. Using standard normalization (if applicable).")
   def preprocess_input(x):
     return x / 255.0  # Standard normalization (divide by 255)
+
 
 # Define model path and class names
 MODEL_PATH = r'model\best-model-16-0.23.h5'
@@ -91,6 +97,34 @@ def preprocess_image(image):
 app = Flask(__name__)
 CORS(app, origins=['http://localhost:3000']) 
 
+# # Configure the Flask-Mail extension
+# app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+# app.config['MAIL_PORT'] = 465
+# app.config['MAIL_USERNAME'] = 'phoenicianimagerecognition@gmail.com'  # Replace with your Gmail email address
+# app.config['MAIL_PASSWORD'] = 'adsy ocgm zxoz xoyn'  # Replace with your Gmail app password
+# app.config['MAIL_USE_TLS'] = False
+# app.config['MAIL_USE_SSL'] = True
+
+# mail = Mail(app)
+
+
+# @app.route('/api/contact', methods=['POST'])
+# def send_contact_email():
+#     name = request.form.get('name')
+#     email = request.form.get('email')
+#     message = request.form.get('message')
+
+#     if not name or not email or not message:
+#         return jsonify({'error': 'Please provide all required fields'}), 400
+
+#     try:
+#         msg = Message(f'New Contact Form Submission from {name}', sender=email, recipients=['robinnabhan@gmail.com'])
+#         msg.body = f'Name: {name}\nEmail: {email}\nMessage: {message}'
+#         mail.send(msg)
+#         return jsonify({'message': 'Your message has been sent successfully'}), 200
+#     except Exception as e:
+#         return jsonify({'error': str(e)}), 500
+
 @app.route("/api/predict", methods=["POST"])
 def predict():
     """Handles image prediction requests."""
@@ -139,8 +173,9 @@ def report_incorrect():
     feedback_dir = os.path.join('user_feedback', corrected_class)
   # Check if subfolder doesn't exist before creating with exist_ok=True
     if not os.path.exists(feedback_dir):
-      os.makedirs(feedback_dir, exist_ok=True)  # Create folder if it doesn't exist # Create folder if it doesn't exist
-    filename = f'{request.remote_addr}_{corrected_class}.jpg'  # Unique filename with user IP
+      os.makedirs(feedback_dir, exist_ok=True)  # Create folder if it doesn't exist
+    timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    filename = f'{request.remote_addr}_{corrected_class}_{timestamp}.jpg'  # Unique filename with user IP
     filepath = os.path.join(feedback_dir, filename)
     with open(filepath, 'wb') as f:
       f.write(image_data.read())

@@ -1,5 +1,6 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const Header: React.FC = () => {
   return (
@@ -9,9 +10,9 @@ const Header: React.FC = () => {
           Phoenician Letter Predictor
         </Typography>
         <Box>
-          <Button color="inherit">Home</Button>
-          <Button color="inherit">About</Button>
-          <Button color="inherit">Contact</Button>
+          <Link to='/'  style={{ textDecoration: 'none', color: 'inherit',}}><Button color="inherit">Home</Button></Link>
+          <Link to='/about'  style={{ textDecoration: 'none', color: 'inherit',}}>  <Button color="inherit">About</Button></Link> 
+          <Link to='/Comtact'  style={{ textDecoration: 'none', color: 'inherit',}}><Button color="inherit">Contact</Button></Link> 
         </Box>
       </Toolbar>
     </AppBar>
