@@ -1,0 +1,19 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "MY_FYP/package.json",
+        "use": "@vercel/static-build",
+        "config": { "distDir": "MY_FYP/build" }
+      },
+      {
+        "src": "MY_FYP/api/server.py",
+        "use": "@vercel/python"
+      }
+    ],
+    "routes": [
+      { "src": "/api/(.*)", "dest": "MY_FYP/api/server.py" },
+      { "src": "/(.*)", "dest": "/MY_FYP/$1" }
+    ]
+  }
+  
